@@ -1,5 +1,5 @@
 <?php
-$secret = "x9T!vL2#pQ8@rK7MwM5z";
+$secret = "x9TvL2pQ8rK7MwM5z";
 if (!isset($_GET['key']) || $_GET['key'] !== $secret) {
     http_response_code(403);
     exit("Access Denied");
