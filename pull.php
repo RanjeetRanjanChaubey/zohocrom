@@ -1,12 +1,22 @@
 <?php
+$secret = "x9T!vL2#pQ8@rK7$wM5z";
+if (!isset($_GET['key']) || $_GET['key'] !== $secret) {
+    http_response_code(403);
+    exit("Access Denied");
+}
+
+// ===== Git Pull Function =====
 function execPrint($command)
 {
-    $result = array();
-    exec($command, $result);
+    $result = [];
+    exec($command . " 2>&1", $result);
     foreach ($result as $line) {
-        print($line . "<br>");
+        echo $line . "<br>";
     }
 }
-// Print the exec output inside of a pre element
-print("<pre>" . execPrint("git pull https://RanjeetRanjanChaubey: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@github.com/RanjeetRanjanChaubey/test.nxtgeneducation.com.git main") . "</pre>");
+
+// ===== Run Git Pull =====
+echo "<pre>";
+execPrint("git pull origin main");
+echo "</pre>";
 ?>
