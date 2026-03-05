@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,10 +19,18 @@ use App\Http\Controllers\Admin\LoginController;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/admin', [HomeController::class, 'index']);
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [LoginController::class, 'login'])->name('login.submit');
-    Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+    // Guest routes
+    Route::middleware('guest:admin')->group(function () {
+        Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
+        Route::post('login', [LoginController::class, 'login'])->name('login.submit');
+    });
+
+    // Authenticated admin routes
+    Route::middleware('auth:admin')->group(function () {
+        Route::get('/', [HomeController::class, 'index'])->name('home'); // route name: admin.home
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'); // route name: admin.dashboard
+        Route::post('logout', [LoginController::class, 'logout'])->name('logout'); // route name: admin.logout
+    });
 });

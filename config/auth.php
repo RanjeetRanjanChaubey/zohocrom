@@ -40,6 +40,17 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'api' => [
+            'driver' => 'token',
+            'provider' => 'users',
+            'hash' => false,
+        ],
+
+        'admin' => [               // <-- Add this
+            'driver' => 'session',
+            'provider' => 'admins', // <-- isko neeche define karenge
+        ],
     ],
 
     /*
@@ -65,10 +76,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'admins' => [               // <-- Add this
+            'driver' => 'eloquent',
+            'model' => App\Models\AdminUsers::class, // Admin model banani hogi
+        ],
     ],
 
     /*
