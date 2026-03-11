@@ -9,9 +9,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        prx('ddddd');
-        echo "ddddd";die;
-        // Dashboard view return karna
-        return view('dashboard'); // resources/views/admin/dashboard.blade.php
+      return view('admin.dashboard');
     }
 }

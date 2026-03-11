@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\AdminUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Models\AdminActivity;
 
 class LoginController extends Controller
 {
@@ -36,9 +37,19 @@ class LoginController extends Controller
         }
 
 
-        Auth::login($admin);
+        // Login with admin guard
+        Auth::guard('admin')->login($admin);
 
-        return redirect()->route('dashboard');
+        $admin->update(['last_activity' => now()]);
+
+        // Save login activity
+        AdminActivity::create([
+            'admin_id' => $admin->id,
+            'activity' => 'Login',
+            'ip_address' => $request->ip(),
+        ]);
+
+        return redirect()->route('admin.dashboard');
     }
 
     protected function redirectTo()
@@ -51,8 +62,23 @@ class LoginController extends Controller
     //     'email' => 'These credentials do not match our records.',
     // ]);
 
-    public function logout()
+   public function logout(Request $request)
     {
-        // Logout logic yahan likho
+        $admin = Auth::guard('admin')->user();
+        if($admin) {
+            AdminActivity::create([
+                'admin_id' => $admin->id,
+                'activity' => 'Logout',
+                'ip_address' => $request->ip(),
+            ]);
+
+            $admin->update(['last_activity' => null]);
+        }
+        Auth::guard('admin')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('admin.login');
     }
 }

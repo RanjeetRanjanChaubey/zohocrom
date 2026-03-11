@@ -18,6 +18,6 @@ class AdminUsers extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    protected $fillable = ['email', 'password', 'name', 'role_id'];
+    protected $fillable = ['email', 'password', 'name', 'role_id','last_activity'];
 }
 
